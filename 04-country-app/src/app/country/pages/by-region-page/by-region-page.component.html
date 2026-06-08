@@ -1,0 +1,50 @@
+
+<div class="flex gap-2">
+
+  <button
+  class="btn btn-outline"
+  [ngClass]="{'btn-active': region() === regions[0] }"
+  (click)="region.set(regions[0])"
+  >Africa</button>
+
+  <button
+   class="btn btn-outline btn-primary"
+  [ngClass]="{'btn-active': region() === regions[1] }"
+   (click)="region.set(regions[1])"
+   >Americas</button>
+
+  <button
+   class="btn btn-outline btn-secondary"
+  [ngClass]="{'btn-active': region() === regions[2] }"
+  (click)="region.set(regions[2])"
+   >Asia</button>
+
+  <button
+  class="btn btn-outline btn-accent"
+  [ngClass]="{'btn-active': region() === regions[3] }"
+  (click)="region.set(regions[3])"
+  >Europe</button>
+
+  <button
+  class="btn btn-outline btn-info"
+  [ngClass]="{'btn-active': region() === regions[4] }"
+  (click)="region.set(regions[4])"
+  >Oceania</button>
+
+  <button
+  class="btn btn-outline btn-success"
+  [ngClass]="{'btn-active': region() === regions[5] }"
+  (click)="region.set(regions[5])"
+
+  >Antarctic</button>
+
+</div>
+
+
+<!-- country-list -->
+<country-list
+  [countries]="countryResource.value() ?? []"
+  [errorMessage]="countryResource.error()"
+  [isEmpty]="countryResource.value()?.length === 0"
+  [isLoading]="countryResource.isLoading()"
+/>
