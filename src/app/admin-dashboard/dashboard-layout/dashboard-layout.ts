@@ -1,10 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-
+import { AppTooltip } from '../app-tooltip/app-tooltip';
+	import {TuiHint, TuiLink} from '@taiga-ui/core';
+	import {TuiAutoColorPipe, TuiAvatar} from '@taiga-ui/kit';
 @Component({
   selector: 'app-dashboard-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, TuiAutoColorPipe, TuiAvatar, TuiHint, TuiLink],
   templateUrl: './dashboard-layout.html',
 })
 export class DashboardLayout {

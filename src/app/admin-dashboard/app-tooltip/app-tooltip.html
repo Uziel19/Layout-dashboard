@@ -1,0 +1,38 @@
+<div class="relative inline-flex group">
+  <ng-content />
+
+  <div
+    class="
+      pointer-events-none absolute z-50 w-64 rounded-xl border border-slate-200
+      bg-white px-4 py-3 text-sm text-slate-600 shadow-xl shadow-slate-900/10
+      opacity-0 scale-95 transition-all duration-200
+      group-hover:opacity-100 group-hover:scale-100
+    "
+    [ngClass]="{
+      'bottom-full left-1/2 mb-3 -translate-x-1/2': position() === 'top',
+      'top-full left-1/2 mt-3 -translate-x-1/2': position() === 'bottom',
+      'right-full top-1/2 mr-3 -translate-y-1/2': position() === 'left',
+      'left-full top-1/2 ml-3 -translate-y-1/2': position() === 'right'
+    }"
+  >
+    @if (title()) {
+      <h4 class="mb-1 text-sm font-semibold text-slate-900">
+        {{ title() }}
+      </h4>
+    }
+
+    <p class="whitespace-pre-line leading-relaxed">
+      {{ text() }}
+    </p>
+
+    <span
+      class="absolute size-3 rotate-45 border bg-white"
+      [ngClass]="{
+        'left-1/2 top-full -mt-1.5 -translate-x-1/2 border-l-0 border-t-0 border-slate-200': position() === 'top',
+        'bottom-full left-1/2 -mb-1.5 -translate-x-1/2 border-b-0 border-r-0 border-slate-200': position() === 'bottom',
+        'left-full top-1/2 -ml-1.5 -translate-y-1/2 border-b-0 border-l-0 border-slate-200': position() === 'left',
+        'right-full top-1/2 -mr-1.5 -translate-y-1/2 border-r-0 border-t-0 border-slate-200': position() === 'right'
+      }"
+    ></span>
+  </div>
+</div>
