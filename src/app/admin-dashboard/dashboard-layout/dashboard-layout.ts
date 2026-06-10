@@ -1,15 +1,44 @@
-import { Component, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, signal, viewChild, ViewChild } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { AppTooltip } from '../app-tooltip/app-tooltip';
-	import {TuiHint, TuiLink} from '@taiga-ui/core';
-	import {TuiAutoColorPipe, TuiAvatar} from '@taiga-ui/kit';
+import tippy, { Instance } from 'tippy.js';
+
+
+
 @Component({
   selector: 'app-dashboard-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, TuiAutoColorPipe, TuiAvatar, TuiHint, TuiLink],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './dashboard-layout.html',
 })
-export class DashboardLayout {
+export class DashboardLayout implements AfterViewInit, OnDestroy {
+
+
+  tooltip = viewChild<ElementRef<HTMLInputElement>>('tooltip');
+  tooltipInstance?: Instance;
+
+
+  ngAfterViewInit(): void {
+
+
+    this.tooltipInstance = tippy(this.tooltip()?.nativeElement!, {
+       content: "<strong>Bolded <span class='text-red-600' >content</span></strong>",
+      placement: 'bottom',
+
+      theme: 'light',
+        allowHTML: true,
+    });
+
+    console.log(this.tooltipInstance);
+  }
+
+
+   ngOnDestroy(): void {
+    this.tooltipInstance?.destroy();
+  }
+
+
+
+
   sidebarOpen = signal(false);
   profileMenuOpen = signal(false);
   openedMenu = signal<string | null>('sales');

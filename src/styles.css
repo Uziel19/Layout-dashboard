@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@import "tippy.js/dist/tippy.css";
+@import "tippy.js/animations/scale.css";
+@import "tippy.js/themes/light.css";
+
 @theme {
   --animate-fade-in: fade-in 0.22s ease-out;
   --animate-fade-up: fade-up 0.3s ease-out;

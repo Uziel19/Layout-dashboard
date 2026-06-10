@@ -1,0 +1,261 @@
+<section class="min-h-screen bg-slate-50 px-6 py-8">
+  <div class="mb-10">
+    <h1 class="text-2xl font-semibold text-slate-900">
+      Dashboard
+    </h1>
+    <p class="mt-1 text-sm text-slate-500">
+      Resumen general del sistema
+    </p>
+  </div>
+
+  <!-- Formulario -->
+  <div class="mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+    <h2 class="mb-8 text-center text-2xl font-semibold text-slate-900">
+      Registro de Usuarios
+    </h2>
+
+    <form class="space-y-6">
+      <div class="grid gap-5 md:grid-cols-2">
+        <div>
+          <label class="mb-2 block text-sm font-medium text-slate-700">
+            Nombre de usuario <span class="text-red-500">*</span>
+          </label>
+
+          <div class="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3">
+            <span class="text-slate-400">👤</span>
+            <input type="text" placeholder="Ej. Juan Medina"
+              class="w-full border-0 bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400" />
+          </div>
+        </div>
+
+        <div>
+          <label class="mb-2 block text-sm font-medium text-slate-700">
+            Número telefónico <span class="text-red-500">*</span>
+          </label>
+
+          <div class="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3">
+            <span class="text-slate-400">☎️</span>
+            <input type="text" placeholder="Ej. 5634643411"
+              class="w-full border-0 bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400" />
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700">
+          Correo electrónico <span class="text-red-500">*</span>
+        </label>
+
+        <div class="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3">
+          <span class="text-slate-400">✉️</span>
+          <input type="email" placeholder="Ej. correo@correo.com"
+            class="w-full border-0 bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400" />
+        </div>
+      </div>
+
+      <div class="pt-4 text-center">
+        <button type="button" (click)="registerUser()"
+          class="rounded-xl bg-blue-700 px-8 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-blue-800 active:scale-[0.98]">
+          Registrar
+        </button>
+
+        <p class="mt-5 text-sm text-slate-500">
+          Los campos marcados con <span class="text-red-500">*</span> son obligatorios.
+        </p>
+      </div>
+    </form>
+  </div>
+
+  <!-- Modal -->
+  @if (showSuccessModal()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 px-4 backdrop-blur-[2px]">
+    <div class="relative w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl">
+
+      <!-- Decoración superior -->
+      <!-- <div class="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-blue-600 via-sky-500 to-emerald-500"></div> -->
+
+      <!-- Botón cerrar -->
+      <button type="button" (click)="closeModal()"
+        class="absolute right-5 top-5 flex size-9 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+        aria-label="Cerrar modal">
+        ✕
+      </button>
+
+      <div class="p-7 sm:p-8">
+
+        <!-- Header -->
+        <div class="text-center">
+          <div
+            class="mx-auto mb-4 flex size-16 items-center justify-center rounded-full bg-emerald-50 ring-8 ring-emerald-50/60">
+            <svg class="size-8 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          </div>
+
+          <h3 class="text-2xl font-semibold tracking-tight text-slate-950">
+            Usuario registrado
+          </h3>
+
+          <p class="mx-auto mt-2 max-w-sm text-sm leading-6 text-slate-500">
+            El usuario fue creado correctamente. Comparte estos datos para que pueda iniciar sesión.
+          </p>
+        </div>
+
+        <!-- Datos de acceso -->
+        <div class="mt-7 space-y-3">
+
+          <!-- Email -->
+          <div
+            class="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50/70 p-4 transition hover:border-blue-200 hover:bg-blue-50/40">
+            <div class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white text-blue-600 shadow-sm">
+              <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" />
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+              </svg>
+            </div>
+
+            <div class="min-w-0 flex-1">
+              <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                Correo electrónico
+              </p>
+              <p class="mt-1 truncate text-sm font-semibold text-slate-900">
+                {{ registeredUser().email }}
+              </p>
+            </div>
+            <button type="button" (click)="copyText(registeredUser().email, 'email')"
+              class="rounded-xl border px-3 py-2 text-xs font-medium shadow-sm transition"
+              [class.border-emerald-200]="copiedField() === 'email'" [class.bg-emerald-50]="copiedField() === 'email'"
+              [class.text-emerald-700]="copiedField() === 'email'" [class.border-slate-200]="copiedField() !== 'email'"
+              [class.bg-white]="copiedField() !== 'email'" [class.text-slate-600]="copiedField() !== 'email'">
+              @if (copiedField() === 'email') {
+              ✓ Copiado
+              } @else {
+              Copiar
+              }
+            </button>
+
+          </div>
+
+          <!-- Password -->
+          <div
+            class="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50/70 p-4 transition hover:border-emerald-200 hover:bg-emerald-50/40">
+            <div
+              class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white text-emerald-600 shadow-sm">
+              <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+            </div>
+
+            <div class="min-w-0 flex-1">
+              <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                Contraseña temporal
+              </p>
+
+              <p class="mt-1 truncate text-sm font-semibold text-slate-900">
+                @if (showPassword()) {
+                {{ registeredUser().password }}
+                } @else {
+                ••••••••••••
+                }
+              </p>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button type="button" (click)="togglePassword()"
+                class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600 shadow-sm transition hover:border-emerald-200 hover:text-emerald-700">
+                @if (showPassword()) {
+                Ocultar
+                } @else {
+                Ver
+                }
+              </button>
+
+              <button type="button" (click)="copyText(registeredUser().password, 'password')"
+                class="rounded-xl border px-3 py-2 text-xs font-medium shadow-sm transition"
+                [class.border-emerald-200]="copiedField() === 'password'"
+                [class.bg-emerald-50]="copiedField() === 'password'"
+                [class.text-emerald-700]="copiedField() === 'password'"
+                [class.border-slate-200]="copiedField() !== 'password'" [class.bg-white]="copiedField() !== 'password'"
+                [class.text-slate-600]="copiedField() !== 'password'">
+                @if (copiedField() === 'password') {
+                ✓ Copiado
+                } @else {
+                Copiar
+                }
+              </button>
+            </div>
+          </div>
+
+          <!-- Link -->
+          <div
+            class="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50/70 p-4 transition hover:border-violet-200 hover:bg-violet-50/40">
+            <div
+              class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white text-violet-600 shadow-sm">
+              <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+              </svg>
+            </div>
+
+            <div class="min-w-0 flex-1">
+              <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                Enlace de acceso
+              </p>
+
+              <a [href]="registeredUser().accessLink" target="_blank"
+                class="mt-1 block truncate text-sm font-semibold text-blue-700 hover:underline">
+                {{ registeredUser().accessLink }}
+              </a>
+            </div>
+
+            <button type="button" (click)="copyText(registeredUser().accessLink, 'link')"
+              class="rounded-xl border px-3 py-2 text-xs font-medium shadow-sm transition"
+              [class.border-emerald-200]="copiedField() === 'link'" [class.bg-emerald-50]="copiedField() === 'link'"
+              [class.text-emerald-700]="copiedField() === 'link'" [class.border-slate-200]="copiedField() !== 'link'"
+              [class.bg-white]="copiedField() !== 'link'" [class.text-slate-600]="copiedField() !== 'link'">
+              @if (copiedField() === 'link') {
+              ✓ Copiado
+              } @else {
+              Copiar
+              }
+            </button>
+          </div>
+        </div>
+
+        <!-- Nota -->
+        <div class="mt-5 rounded-2xl border border-blue-100 bg-blue-50 px-4 py-3">
+          <p class="text-sm leading-6 text-blue-800">
+            Por seguridad, recomienda al usuario cambiar su contraseña al iniciar sesión por primera vez.
+          </p>
+        </div>
+
+        <!-- Botones -->
+        <div class="mt-6 grid gap-3 sm:grid-cols-2">
+          <button type="button" (click)="copyAllData()"
+            class="rounded-2xl border px-5 py-3 text-sm font-medium shadow-sm transition active:scale-[0.98]"
+            [class.border-emerald-200]="copiedField() === 'all'" [class.bg-emerald-50]="copiedField() === 'all'"
+            [class.text-emerald-700]="copiedField() === 'all'" [class.border-slate-200]="copiedField() !== 'all'"
+            [class.bg-white]="copiedField() !== 'all'" [class.text-slate-700]="copiedField() !== 'all'">
+            @if (copiedField() === 'all') {
+            ✓ Información copiada
+            } @else {
+            Copiar todo
+            }
+          </button>
+
+          <button type="button" (click)="closeModal()"
+            class="rounded-2xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-700/20 transition hover:bg-blue-800 active:scale-[0.98]">
+            Entendido
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  }
+</section>
