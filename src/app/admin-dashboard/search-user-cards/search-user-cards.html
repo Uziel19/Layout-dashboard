@@ -1,0 +1,518 @@
+<section
+  class="w-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_20px_60px_-35px_rgba(15,23,42,0.55)]"
+>
+  <form
+    [formGroup]="searchForm"
+    (ngSubmit)="searchCards()"
+    class="p-4 sm:p-6"
+  >
+    <!-- Header -->
+    <div class="mb-6 text-center">
+      <div
+        class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700 ring-1 ring-blue-100"
+      >
+        <svg
+          class="h-5 w-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+        >
+          <rect x="3" y="6" width="18" height="12" rx="2" />
+          <path d="M3 10h18" />
+        </svg>
+      </div>
+
+      <h2 class="text-lg font-semibold tracking-tight text-slate-950">
+        Buscar tarjetas por correo
+      </h2>
+
+      <p class="mx-auto mt-2 max-w-xl text-sm leading-6 text-slate-500">
+        Ingresa el correo del usuario para consultar sus tarjetas registradas.
+      </p>
+    </div>
+
+    <!-- Buscador -->
+    <div
+      class="rounded-3xl border border-slate-200 bg-slate-50/70 p-3 shadow-inner shadow-slate-100"
+    >
+      <div class="grid gap-3 md:grid-cols-[1fr_auto]">
+        <div>
+          <div class="relative">
+            <span
+              class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+            >
+              <svg
+                class="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M4.75 6.75A2.25 2.25 0 0 1 7 4.5h10a2.25 2.25 0 0 1 2.25 2.25v10.5A2.25 2.25 0 0 1 17 19.5H7a2.25 2.25 0 0 1-2.25-2.25V6.75Z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m5.5 7.5 6.5 4.75L18.5 7.5"
+                />
+              </svg>
+            </span>
+
+            <input
+              type="email"
+              formControlName="email"
+              placeholder="correo@ejemplo.com"
+              class="h-12 w-full rounded-2xl border border-slate-200 bg-white pl-12 pr-4 text-sm text-slate-700 shadow-sm outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-100"
+              [class.border-red-400]="emailControl.invalid && emailControl.touched"
+              [class.focus:border-red-500]="emailControl.invalid && emailControl.touched"
+              [class.focus:ring-red-100]="emailControl.invalid && emailControl.touched"
+            />
+          </div>
+
+          @if (emailControl.hasError('required') && emailControl.touched) {
+            <p class="mt-2 text-sm text-red-500">
+              El correo es obligatorio.
+            </p>
+          }
+
+          @if (emailControl.hasError('email') && emailControl.touched) {
+            <p class="mt-2 text-sm text-red-500">
+              Ingresa un correo válido.
+            </p>
+          }
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="emailControl.invalid || isLoading"
+          class="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-blue-700 px-6 text-sm font-medium text-white shadow-lg shadow-blue-700/20 transition hover:bg-blue-800 hover:shadow-blue-700/30 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none md:min-w-36"
+        >
+          @if (isLoading) {
+            <svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              />
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4Z"
+              />
+            </svg>
+
+            Buscando
+          } @else {
+            <svg
+              class="h-4 w-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m21 21-4.35-4.35"
+              />
+              <circle cx="11" cy="11" r="7" />
+            </svg>
+
+            Buscar
+          }
+        </button>
+      </div>
+    </div>
+
+    <!-- Resultados -->
+    @if (cards.length > 0) {
+      <div
+        class="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_16px_45px_-34px_rgba(15,23,42,0.75)]"
+      >
+        <!-- Encabezado -->
+        <div
+          class="flex items-center gap-3 border-b border-slate-200 bg-gradient-to-r from-white via-slate-50 to-white px-4 py-4 sm:px-5"
+        >
+          <div
+            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-700 ring-1 ring-blue-100"
+          >
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="3" y="6" width="18" height="12" rx="2" />
+              <path d="M3 10h18" />
+            </svg>
+          </div>
+
+          <div>
+            <h3 class="text-base font-semibold text-slate-950">
+              Tarjetas del usuario
+            </h3>
+
+            <p class="mt-0.5 text-xs text-slate-500">
+              Selecciona una tarjeta para continuar.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tarjeta seleccionada -->
+        @if (selectedCard) {
+          <div class="border-b border-blue-100 bg-gradient-to-r from-blue-50 via-white to-blue-50 px-4 py-4 sm:px-5">
+            <div
+              class="flex flex-col gap-3 rounded-2xl border border-blue-100 bg-white/80 p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-blue-700 text-white shadow-lg shadow-blue-700/20"
+                >
+                  <svg
+                    class="h-5 w-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m5 13 4 4L19 7"
+                    />
+                  </svg>
+                </div>
+
+                <div>
+                  <p class="text-sm font-semibold text-slate-950">
+                    Tarjeta seleccionada
+                  </p>
+
+                  <p class="mt-1 text-sm text-slate-600">
+                    {{ selectedCard.brand }} **** {{ selectedCard.lastDigits }}
+                    · {{ selectedCard.type }}
+                    · Vence {{ selectedCard.expiration }}
+                  </p>
+                </div>
+              </div>
+
+              <span
+                class="inline-flex w-fit items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 ring-1 ring-blue-100"
+              >
+                <span class="h-1.5 w-1.5 rounded-full bg-blue-700"></span>
+                Lista para usar
+              </span>
+            </div>
+          </div>
+        }
+
+        <!-- Tabla responsiva -->
+        <div class="overflow-x-auto [-webkit-overflow-scrolling:touch]">
+          <table class="w-full min-w-[760px] text-left">
+            <thead class="border-b border-slate-200 bg-slate-50/80">
+              <tr>
+                <th class="w-[130px] px-5 py-3 text-xs font-medium text-slate-500">
+                  Seleccionar
+                </th>
+
+                <th class="w-[280px] px-5 py-3 text-xs font-medium text-slate-500">
+                  Tarjeta
+                </th>
+
+                <th class="w-[180px] px-5 py-3 text-xs font-medium text-slate-500">
+                  Titular
+                </th>
+
+                <th class="w-[140px] px-5 py-3 text-xs font-medium text-slate-500">
+                  Tipo
+                </th>
+
+                <th class="w-[160px] px-5 py-3 text-xs font-medium text-slate-500">
+                  Vencimiento
+                </th>
+
+                <th class="w-[140px] px-5 py-3 text-xs font-medium text-slate-500">
+                  Estado
+                </th>
+              </tr>
+            </thead>
+
+            <tbody class="divide-y divide-slate-100">
+              @for (card of paginatedCards; track card.id) {
+                <tr
+                  (click)="selectCard(card.id)"
+                  class="cursor-pointer bg-white transition hover:bg-slate-50"
+                  [class.bg-blue-50]="selectedCardId === card.id"
+                  [class.shadow-[inset_4px_0_0_#2563eb]]="selectedCardId === card.id"
+                >
+                  <td class="px-5 py-4">
+                    <span
+                      class="flex h-5 w-5 items-center justify-center rounded-full border bg-white transition"
+                      [class.border-blue-700]="selectedCardId === card.id"
+                      [class.bg-blue-700]="selectedCardId === card.id"
+                      [class.border-slate-300]="selectedCardId !== card.id"
+                    >
+                      @if (selectedCardId === card.id) {
+                        <svg
+                          class="h-3.5 w-3.5 text-white"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="3"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="m5 13 4 4L19 7"
+                          />
+                        </svg>
+                      }
+                    </span>
+                  </td>
+
+                  <td class="px-5 py-4">
+                    <div class="flex items-center gap-4 whitespace-nowrap">
+                      @if (card.brand === 'VISA') {
+                        <svg
+                          viewBox="0 0 100 32"
+                          class="h-5 w-12 shrink-0"
+                          aria-label="Visa"
+                        >
+                          <path
+                            d="M38.76 22.18H34.6L37.2 9.82h4.16L38.76 22.18Z"
+                            fill="#1A1F71"
+                          />
+                          <path
+                            d="M54.2 10.13a10.28 10.28 0 0 0-3.73-.67c-4.1 0-6.98 1.95-7 4.74-.03 2.05 2.05 3.2 3.61 3.88 1.6.7 2.14 1.15 2.14 1.78-.02.96-1.28 1.4-2.46 1.4a8.93 8.93 0 0 1-3.87-.75l-.53-.23-.58 3.22c.97.4 2.76.75 4.62.77 4.36 0 7.19-1.93 7.22-4.92.02-1.62-1.08-2.86-3.48-3.88-1.45-.66-2.34-1.1-2.33-1.76 0-.59.74-1.22 2.33-1.22a7.85 7.85 0 0 1 3.08.55l.37.16.59-3.07Z"
+                            fill="#1A1F71"
+                          />
+                          <path
+                            d="M64.93 9.82h-3.22c-1 0-1.75.26-2.18 1.2l-6.2 11.16h4.38s.72-1.78.88-2.17h5.35c.13.5.5 2.17.5 2.17h3.87L64.93 9.82Zm-5.13 7.23c.35-.84 1.66-4 1.66-4-.02.04.34-.83.55-1.37l.28 1.24s.8 3.45.97 4.13H59.8Z"
+                            fill="#1A1F71"
+                          />
+                          <path
+                            d="M31.12 9.82 27.05 18.25l-.44-2.02c-.75-2.3-3.11-4.8-5.74-6.05l3.72 11.98 4.4-.01 6.55-12.33h-4.42Z"
+                            fill="#1A1F71"
+                          />
+                          <path
+                            d="M23.28 9.82h-6.7l-.05.3c5.2 1.2 8.65 4.1 10.08 7.59l-1.46-6.68c-.25-.92-.98-1.18-1.87-1.21Z"
+                            fill="#F7B600"
+                          />
+                        </svg>
+                      } @else {
+                        <div class="relative h-5 w-10 shrink-0">
+                          <span class="absolute left-1 top-0.5 h-4 w-4 rounded-full bg-red-500"></span>
+                          <span class="absolute left-4 top-0.5 h-4 w-4 rounded-full bg-amber-400 mix-blend-multiply"></span>
+                        </div>
+                      }
+
+                      <div class="flex items-center gap-2">
+                        <span class="text-sm text-slate-700">
+                          **** **** **** {{ card.lastDigits }}
+                        </span>
+
+                        @if (selectedCardId === card.id) {
+                          <span class="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+                            Seleccionada
+                          </span>
+                        }
+                      </div>
+                    </div>
+                  </td>
+
+                  <td class="whitespace-nowrap px-5 py-4 text-sm text-slate-700">
+                    {{ card.holder }}
+                  </td>
+
+                  <td class="whitespace-nowrap px-5 py-4 text-sm text-slate-700">
+                    {{ card.type }}
+                  </td>
+
+                  <td class="whitespace-nowrap px-5 py-4 text-sm text-slate-700">
+                    {{ card.expiration }}
+                  </td>
+
+                  <td class="whitespace-nowrap px-5 py-4">
+                    <span
+                      class="inline-flex rounded-full px-2.5 py-1 text-xs font-medium"
+                      [class.bg-emerald-50]="card.status === 'Activa'"
+                      [class.text-emerald-700]="card.status === 'Activa'"
+                      [class.bg-slate-100]="card.status !== 'Activa'"
+                      [class.text-slate-600]="card.status !== 'Activa'"
+                    >
+                      {{ card.status }}
+                    </span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Paginación -->
+        <div class="border-t border-slate-200 bg-slate-50/80 px-4 py-4 sm:px-5">
+          <!-- Móvil -->
+          <div class="flex items-center justify-between gap-3 sm:hidden">
+            <button
+              type="button"
+              (click)="previousPage()"
+              [disabled]="page === 1"
+              class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-slate-500 shadow-sm ring-1 ring-slate-200 transition hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-40"
+              aria-label="Página anterior"
+            >
+              <svg
+                class="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m15 18-6-6 6-6"
+                />
+              </svg>
+            </button>
+
+            <div class="flex min-w-0 flex-1 flex-col items-center">
+              <p class="text-sm font-semibold text-slate-800">
+                Página {{ page }} de {{ totalPages }}
+              </p>
+
+              <p class="mt-0.5 text-xs text-slate-500">
+                {{ startIndex + 1 }} - {{ endIndex }} de {{ totalCards }}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              (click)="nextPage()"
+              [disabled]="page === totalPages"
+              class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-blue-700 shadow-sm ring-1 ring-slate-200 transition hover:bg-blue-50 disabled:cursor-not-allowed disabled:text-slate-400 disabled:opacity-40"
+              aria-label="Página siguiente"
+            >
+              <svg
+                class="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m9 18 6-6-6-6"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Tablet / escritorio -->
+          <div class="hidden flex-col gap-4 sm:flex lg:flex-row lg:items-center lg:justify-between">
+            <p class="text-sm text-slate-500">
+              Mostrando
+              <span class="font-medium text-slate-700">{{ startIndex + 1 }}</span>
+              -
+              <span class="font-medium text-slate-700">{{ endIndex }}</span>
+              de
+              <span class="font-medium text-slate-700">{{ totalCards }}</span>
+              tarjetas
+            </p>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                (click)="previousPage()"
+                [disabled]="page === 1"
+                class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white text-slate-400 shadow-sm ring-1 ring-slate-200 transition hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-40"
+                aria-label="Página anterior"
+              >
+                <svg
+                  class="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m15 18-6-6 6-6"
+                  />
+                </svg>
+              </button>
+
+              @for (item of paginationItems; track $index) {
+                @if (item === '...') {
+                  <span class="inline-flex h-9 min-w-9 items-center justify-center rounded-lg px-2 text-sm font-semibold text-blue-600">
+                    ...
+                  </span>
+                } @else {
+                  <button
+                    type="button"
+                    (click)="goToPage(item)"
+                    class="inline-flex h-9 min-w-9 items-center justify-center rounded-lg px-3 text-sm font-semibold shadow-sm ring-1 ring-slate-200 transition"
+                    [class.bg-blue-600]="page === item"
+                    [class.text-white]="page === item"
+                    [class.ring-blue-600]="page === item"
+                    [class.bg-white]="page !== item"
+                    [class.text-blue-600]="page !== item"
+                    [class.hover:bg-blue-50]="page !== item"
+                  >
+                    {{ item }}
+                  </button>
+                }
+              }
+
+              <button
+                type="button"
+                (click)="nextPage()"
+                [disabled]="page === totalPages"
+                class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white text-blue-600 shadow-sm ring-1 ring-slate-200 transition hover:bg-blue-50 disabled:cursor-not-allowed disabled:text-slate-400 disabled:opacity-40"
+                aria-label="Página siguiente"
+              >
+                <svg
+                  class="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m9 18 6-6-6-6"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Estado vacío -->
+    @if (hasSearched && !isLoading && cards.length === 0) {
+      <div
+        class="mt-5 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center"
+      >
+        <h3 class="text-sm font-semibold text-slate-900">
+          No se encontraron tarjetas
+        </h3>
+
+        <p class="mt-1 text-sm text-slate-500">
+          Verifica que el correo sea correcto e intenta nuevamente.
+        </p>
+      </div>
+    }
+  </form>
+</section>
