@@ -38,3 +38,15 @@
     transform: translateY(0) scale(1);
   }
 }
+
+
+
+@layer components {
+  .menu-item {
+    @apply flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-950;
+  }
+
+  .simple-card {
+    @apply rounded-[1.35rem] border border-slate-200 bg-white shadow-[0_12px_35px_rgba(15,23,42,0.045)];
+  }
+}
